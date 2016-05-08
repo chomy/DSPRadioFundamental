@@ -18,7 +18,7 @@ TEXFILES=main.tex colophon.tex cover.tex fm.tex iq.tex radio.tex wifi.tex
 .suffix: .tex .dvi
 
 #all: ${DVI}
-all: pdf
+all: book
 
 pdf: ${PDF}
 

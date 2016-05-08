@@ -1,0 +1,356 @@
+\chapter*{DSPラジオの原理}
+\section*{はじめに}
+DSPラジオの原理をこれまで理論的に3冊の同人誌にわたって述べてきた。ここではそれらをまとめて一つにし、系統的にDSPラジオの原理を学べるようにした。
+
+では、はじめよう。
+ここでは無線関係、特に電磁波、交流理論の非常に基礎的な部分で私が学習していて気になった部分について述べる。教科書に載っている程度のレベルの話であり、読者がこの程度のことを理解しているのであれば、確実に退屈するであろう。また、冗長ではあるがなるべく計算の過程を省略せずに書く。これは私が後に振り返った時にどうしてそうなったかを思い出すためである。もしも読者が学習途上にあるなら、自分の手を動かして、私が辿った過程をなぞってみることをお勧めする。
+
+\section*{交流電圧の実効値の導出}
+無線工学の教科書には、交流電圧の実効値は振幅の$\sqrt{2}$分の1であると書かれているが、導出まで
+述べられていないことがある。まずはこれを導出してみよう。
+
+交流電圧が正弦波交流と仮定すると、電圧$V$は、振幅を$V_0$とすると以下のように書ける。
+\begin{equation}
+V=V_0 \sin(\omega t) \label{eq:defv}
+\end{equation}
+ここで$\omega$とは角振動数で単位時間あたりの位相の変化率である。角振動数は、周波数を$f$とすると
+\[
+\omega = 2 \pi f
+\]
+であり、振動の周期を$T$とすると
+\[
+T = \frac{1}{f} = \frac{2 \pi}{\omega}
+\]
+である。交流電圧の実効値$V_e$は、1周期あたりの平均の電圧である。$\sin$関数を1周期の間で積分すると$0$になってしまうため、$V$を二乗して積分し、その結果の平方根を実効値とする。すなわち
+\begin{equation}
+V_e^2 =\frac{1}{T} \int_{0}^{T}V_0^2\sin^2(\omega t)dt \label{eq:Veff_sq}
+\end{equation}
+$\sin$の二乗の積分はすぐにはできないので、倍角公式を使って$\cos 2\omega t$の積分に変換する。
+倍角公式は、
+\[
+\sin^2\theta = \frac{1-\cos 2\theta}{2}
+\]
+であるから、式(\ref{eq:Veff_sq})に上式を代入して積分を実行すると
+\begin{eqnarray*}
+V_e^2 &=& \frac{1}{T}\int_{0}^{T} V_0 \frac{1-\cos 2\omega t}{2} dt \\
+&=& \frac{V_0^2}{2T}\int_0^{T} 1 - \cos 2\omega t dt \\
+&=& \frac{V_0^2}{2T}[t - \frac{1}{2 \omega}\sin 2\omega t ]_0^{T} \\
+&=& \frac{V_0^2}{2}
+\end{eqnarray*}
+両辺の平方根をとり、符号が正のものを実効値とすると、
+\[
+V_e = \frac{V_0}{\sqrt{2}}
+\]
+となる。
+
+\section*{正弦波交流の複素表示}
+式(\ref{eq:defv})で、時刻$t$における正弦波交流の電圧の瞬時値$V_0$を定義したが、
+オイーラー(Eular's Formula)の公式
+\[
+e^{j\theta} = \cos\theta + j\sin\theta
+\]
+を用いて
+\begin{equation}
+V = V_e e^{j\omega t} \label{eq:sinwave}
+\end{equation}
+と書く。ここで$j=\sqrt{-1}$である。電圧の計算値が必要な場合は、この虚部をとれば良い。
+このように書く理由は、正弦波が作る電場、磁場の時間微分の計算が以下のように容易になるためである。
+
+$\lambda$を定数として、関数$f(t)=e^{\lambda t}$
+の時間微分は
+\[
+\frac{df}{dt}=\lambda e^{\lambda t}
+\]
+であるから、たとえば正弦波交流が作る電場の大きさを$E=E_0e^{j\omega t}$とすると、この時間微分は
+\[
+\frac{dE}{dt} = E_0 j\omega e^{j \omega t} = j\omega E
+\]
+となり、微分を定数$j\omega$との積に変換することができる。
+
+
+\section*{オイーラーの公式の証明}
+少し脱線して、オイーラーの公式の証明をやってみよう。マクローリン展開を用いて証明するのが一般的なようだが、ここでは微分方程式を用いた方法でやってみよう。関数$f(x)$を
+\[
+f(x) = \cos x + j\sin x
+\]
+と定義する。この$f(x)$の$x$による微分を計算すると、
+\[
+f'(x) = \frac{df}{dx} = -\sin x + j\cos x
+\]
+となる。次に。$f'(x)$を$f(x)$で割ると
+\begin{eqnarray*}
+\frac{f'}{f} &=& \frac{-\sin x + j\cos x}{\cos x + j\sin x}\\
+&=&\frac{(-\sin x + j\cos x)(\cos x - j\sin x)}{(\cos x + j\sin x)(\cos x - j\sin x)}\\
+&=&\frac{-\sin x \cos x + j\sin^2 x + j\cos^2 x -j^2\sin x \cos x}{\cos^2 x + \sin^2 x}\\
+&=&\frac{-\sin x \cos x + \sin x \cos x +j(\sin^2 x + \cos^2 x)}{\cos^2x + sin^2x}\\
+&=&j
+\end{eqnarray*}
+すなわち
+\[
+\frac{1}{f}\frac{df}{dx} = j
+\]
+という微分方程式になる。これを解くと
+\begin{eqnarray*}
+\frac{1}{f}\frac{df}{dx} &=& j\\
+\frac{1}{f}df &=& jdx\\
+\int \frac{1}{f} df &=& \int j dx\\
+\ln|f| &=& jx + C_1\\
+f &=& e^{jx+C_1}\\
+  &=& e^C_1e^{jx}\\
+ &=& C e^{jx}
+\end{eqnarray*}
+となる。ただし、$C_1$、$C$は積分定数。$e^{C_1}$は定数なので、$e^{C_1}=C$とした。
+そういえば最初に、$f(x)=\cos x + j\sin x$としたので、
+\[
+\cos x + j\sin x = C e^{jx}
+\]
+である。$x=0$の時$f(0) = 1$で、$C e^{0} = C$なので、$C=1$よって
+\[
+\cos x + j\sin x = e^{ix}
+\]
+が示された。
+
+\section*{マクスウェル方程式から電磁波を導出}
+電磁波は、マクスウェル方程式から波動方程式が導出できることからその存在が予言され、ヘルツによって
+電磁波の存在が実験的に確かめられた。この節では、その過程をたどってみよう。
+\subsection*{マクスウェル方程式}
+マクスウェル方程式は、マクスウェルが既に知られていたファラデーの電磁誘導の法則、アンペールの回路法則、ガウスの定理を
+まとめたもので、誘電率を$\epsilon$、透磁率を$\mu$として、以下の簡潔な方程式で表現されている。
+\begin{eqnarray}
+\nabla \times \bm{E} &=& -\frac{\partial \bm{B}}{\partial t} \label{eq:mxwl-E}\\
+\nabla \times \bm{H} &=& \bm{J} + \frac{\partial \bm{D}}{\partial t} \label{eq:mxwl-H}\\
+\nabla \cdot \bm{D}  &=& \rho \label{eq:mxwl-D}\\
+\nabla \cdot \bm{B}  &=& 0 \label{eq:mxwl-B}
+\end{eqnarray}
+また、
+\begin{eqnarray}
+\bm{D} &=& \epsilon \bm{E} \label{eq:mxwl-D2}\\
+\bm{B} &=& \mu \bm{H} \label{eq:mxwl-B2}\\
+\bm{J} &=& \sigma \bm{E} \label{eq:mxwl-J}
+\end{eqnarray}
+である。ここで、$\bm{E}$は電場、$\bm{H}$は磁場、$\bm{D}$は電束密度、$\bm{B}$磁束密度で、$\nabla$は
+$\bm{i}$、$\bm{j}$、$\bm{k}$を$x$、$y$、$z$方向の単位ベクトルとすると
+\[
+\nabla = \frac{\partial}{\partial x} \bm{i} + \frac{\partial}{\partial y} \bm{j} + \frac{\partial}{\partial z} \bm{k}
+\]
+という演算子のベクトルである。$\nabla$を任意のベクトル$\bm{A}=A_x\bm{i} + A_y\bm{j} + A_z\bm{k}$に作用させると
+\[
+\nabla\bm{A} = \frac{\partial A_x}{\partial x} \bm{i} + \frac{\partial A_y}{\partial y} \bm{j} + \frac{\partial A_z}{\partial z} \bm{k}
+\]
+これは、「ベクトル$\bm{A}$の$x$、$y$、$z$方向のそれぞれの変化率をベクトルにしたもの」である。ベクトルのスカラー積、ベクトル積も確認しておこう。
+ベクトル$\bm{A}$の他に、もう一つ任意のベクトル$\bm{B}=B_x\bm{i} + B_y\bm{j} + B_z\bm{k}$を使うことにすると、$\bm{A}$と$\bm{B}$の
+内積（スカラー積）および外積（ベクトル積）は
+\begin{eqnarray*}
+\bm{A} \cdot \bm{B} &=& A_xB_x + A_yB_y + A_zB_z \\
+\bm{A}\times\bm{B} &=& (A_yB_z - A_zB_y)\bm{i} + (A_zB_x - A_xB_z)\bm{j} + (A_xB_y - A_yB_z)\bm{k}
+\end{eqnarray*}
+である。また、$\bm{A}\bot(\bm{A}\times\bm{B}$)、$\bm{B}\bot(\bm{A}\times\bm{B})$である。そして$\nabla$と$\bm{A}$との内積、外積は、
+\begin{eqnarray*}
+\nabla \cdot \bm{A} &=& \frac{\partial A_x}{\partial x} + \frac{\partial A_y}{\partial y} + \frac{\partial A_z}{\partial z} \\
+\nabla \times\bm{A} &=& (\frac{\partial A_z}{\partial y} - \frac{\partial A_y}{\partial z})\bm{i} + (\frac{\partial A_x}{\partial z} - \frac{\partial A_z}{\partial x})\bm{j} + (\frac{\partial A_y}{\partial x} - \frac{\partial A_x}{\partial y})\bm{k}
+\end{eqnarray*}
+である。
+
+式(\ref{eq:mxwl-B2})を式(\ref{eq:mxwl-E})に、また式(\ref{eq:mxwl-D2})、式(\ref{eq:mxwl-D2})を式(\ref{eq:mxwl-H})に代入すると、
+\begin{eqnarray}
+\nabla \times \bm{E} &=& -\mu\frac{\partial \bm{H}}{\partial t} \label{eq:mxwl-EH}\\
+\nabla \times \bm{H} &=& \sigma\bm{E} + \epsilon\frac{\partial \bm{E}}{\partial t} \label{eq:mxwl-HE}
+\end{eqnarray}
+となる。式(\ref{eq:mxwl-EH})を見ると、左辺が $0$ でないとき($\nabla\times\bm{E}\neq 0$)、右辺と左辺の間のイコール($=$)を成立させるためには、
+$\mu$が定数なので、磁場の時間変化$\frac{\partial \bm{H}}{\partial t}$は$0$になれない。
+すなわち空間の電場が変化すると、磁場が時間的に変化することを意味する。
+同様に、式(\ref{eq:mxwl-HE})を見ると、空間の磁場が変化する($\nabla\times\bm{H}\neq 0$)と、電場の時間変化を引き起こすことがわかる。
+よってなんらかの原因で空間の電場が変化すると、磁場が変化し、その磁場の変化が電場を変化させ、その電場の変化が....と電場と磁場の変化の連鎖が
+継続することがわかる。はじめに磁場が変化した場合も同様である。
+
+\subsection*{波動方程式}
+$\nabla$と$\nabla\times\bm{E}$の外積をとると、式(\ref{eq:mxwl-EH})より
+\[
+\nabla\times(\nabla\times\bm{E}) = -\mu \frac{\partial}{\partial t}(\nabla\times\bm{H})
+\]
+式(\ref{eq:mxwl-HE})を代入すると
+\begin{equation}
+\nabla\times(\nabla\times\bm{E}) = -\mu \sigma\frac{\partial\bm{E}}{\partial t} - \mu\epsilon\frac{\partial^2 \bm{E}}{\partial t^2} \label{eq:mxwl-DDE}
+\end{equation}
+となる。空間に電荷がない場合を考えると、$\nabla\bm{D}=\epsilon\nabla\bm{E} = 0$であるから、ベクトル公式
+\[\nabla\times(\nabla\times\bm{E}) = \nabla(\nabla\cdot\bm{E})-\nabla^2\bm{E}
+\]
+は、
+\[
+\nabla\times(\nabla\times\bm{E}) = -\nabla^2 E
+\]
+となる。これを式(\ref{eq:mxwl-DDE})に代入すると、
+\begin{equation}
+\nabla^2 E = \mu \sigma\frac{\partial\bm{E}}{\partial t} + \mu\epsilon\frac{\partial^2 \bm{E}}{\partial t^2} \label{eq:mxwl-wveq}
+\end{equation}
+と書ける。これを電磁波の波動方程式といい、マイクロ波の問題はこの波動方程式に境界条件を適用することで解くことができる。
+
+
+特に電場、磁場が正弦波交流により生じた場合、式(\ref{eq:sinwave})と同様に
+\begin{eqnarray*}
+\bm{E} &=& \bm{E_0}e^{j\omega t}\\
+\bm{H} &=& \bm{H_0}e^{j\omega t}
+\end{eqnarray*}
+となるので、式(\ref{eq:mxwl-E})は、
+\begin{eqnarray}
+\nabla \times \bm{E} &=& -\mu \frac{\partial}{\partial t}\bm{H_0}e^{j\omega t} \nonumber\\
+&=& -j\omega\mu\bm{H_0}e^{j\omega t} \nonumber\\
+&=& -j\omega \mu \bm{H} \label{eq:mxwl_rotE}
+\end{eqnarray}
+となり、同様に式(\ref{eq:mxwl-H})は、
+\begin{eqnarray}
+\nabla \times \bm{H} &=& \sigma \bm{E} + \mu \frac{\partial}{\partial t}\bm{E_0}e^{j\omega t} \nonumber\\
+&=& \sigma\bm{E} + j\omega\mu\bm{E_0}e^{j\omega t} \nonumber\\
+&=& (\sigma + j\omega \mu) \bm{E} \label{eq:mxwl_rotH}
+\end{eqnarray}
+となる。
+またこの時の波動方程式は、
+\begin{eqnarray*}
+\nabla^2 \bm{E} &=& \mu \sigma\frac{\partial\bm{E_0}e^{j\omega t}}{\partial t} + \mu\epsilon\frac{\partial^2 \bm{E_0}e^{j\omega t}}{\partial t^2}\\
+&=& \mu \sigma j\omega \bm{E_0}e^{j \omega t} + \mu\epsilon j^2 \omega^2 \bm{E_0}e^{j \omega t} \\
+&=&\mu \sigma j\omega \bm{E} - \mu\epsilon \omega^2 \bm{E}\\
+&=& (j\mu\sigma\omega - \omega^2\mu\epsilon)\bm{E}\\
+&=& -k^2\bm{E}
+\end{eqnarray*}
+となる。ここで$k^2= \mu\epsilon \omega^2 -j\omega\mu\sigma$とした。これは
+\begin{equation}
+\nabla^2\bm{E} + k^2\bm{E} = 0
+\end{equation}
+であり、ヘルムホルツ方程式と呼ばれる形である。
+
+磁場についても、$\nabla$と$\nabla\times\bm{E}$の外積をとり、式(\ref{eq:mxwl-HE})に式(\ref{eq:mxwl-HE})を代入し
+同様のことを行うと、磁場についてのヘルムホルツ方程式を得る。
+\begin{equation}
+\nabla^2\bm{H} + k^2\bm{H} = 0
+\end{equation}
+
+
+\subsection*{平面波}
+導電率$\sigma=0$の空間において、すなわち、空気のように空間に満たされている物質の抵抗が十分大きい場合で、
+$\bm{E}$、$\bm{H}$が$z$のみの関数であるときを考える。式(\ref{eq:mxwl_rotE})を
+$E$、$H$が正弦波と仮定して計算すると、
+\begin{eqnarray}
+(\frac{\partial E_y}{\partial z} - \frac{\partial E_z}{\partial y})\bm{i} +\
+(\frac{\partial E_z}{\partial x} - \frac{\partial E_x}{\partial z})\bm{j} +\
+(\frac{\partial E_x}{\partial y} - \frac{\partial E_y}{\partial x})\bm{k} =\
+-j\omega\mu(H_x\bm{i}+H_y\bm{j}+H_z\bm{k})
+\end{eqnarray}
+ で、成分ごとに書くと、
+\begin{eqnarray}
+\frac{\partial E_y}{\partial z} - \frac{\partial E_z}{\partial y} =- j\omega\mu H_x  \\
+\frac{\partial E_z}{\partial x} - \frac{\partial E_x}{\partial z} =- j\omega\mu H_y  \label{eq:plane_waveEzExHy}\\
+\frac{\partial E_x}{\partial y} - \frac{\partial E_y}{\partial x} = - j\omega\mu H_z  
+\end{eqnarray}
+となる。また、式(\ref{eq:mxwl_rotH})も同様に、
+\begin{eqnarray}
+(\frac{\partial H_y}{\partial z} - \frac{\partial H_z}{\partial y})\bm{i} +\
+(\frac{\partial H_z}{\partial x} - \frac{\partial H_x}{\partial z})\bm{j} +\
+(\frac{\partial H_x}{\partial y} - \frac{\partial H_y}{\partial x})\bm{k} =\
+(\sigma + j\omega\epsilon)(H_x\bm{i}+H_y\bm{j}+H_z\bm{k})
+\end{eqnarray}
+で、成分ごとに書くと、
+\begin{eqnarray}
+(\frac{\partial H_y}{\partial z} - \frac{\partial H_z}{\partial y})\bm{i} = \sigma + (j\omega\epsilon)H_x\\
+(\frac{\partial H_z}{\partial x} - \frac{\partial H_x}{\partial z})\bm{j} = \sigma + (j\omega\epsilon)H_y\\
+(\frac{\partial H_x}{\partial y} - \frac{\partial H_y}{\partial x})\bm{k} = \sigma + (j\omega\epsilon)H_z
+\end{eqnarray}
+となる。$\bm{E}$が$z$のみに依存する関数であれば、$x$、$y$方向の微分は$0$であることに注意すると
+\begin{equation}
+H_z = E_z =0
+\end{equation}
+よって
+\begin{eqnarray}
+\frac{dE_x}{dz} &=& -j\omega\mu H_y \label{eq:plane_ExHy}\\
+\frac{dH_y}{dz} &=& -j\omega\epsilon E_x \label{eq:plane_HyEx}\\
+\frac{dE_y}{dz} &=& -j\omega\mu H_x \label{eq:plane_EyHx}\\
+\frac{dH_x}{dz} &=& -j\omega\epsilon E_y \label{eq:plane_HxEy}
+\end{eqnarray}
+となる。式(\ref{eq:plane_ExHy})の両辺を$z$で微分し、式(\ref{eq:plane_HyEx})を代入すると
+\begin{eqnarray*}
+\frac{d^2E_x}{dz^2} &=& -j\omega\mu \frac{dH_y}{dz} \nonumber\\
+&=& -j\omega\mu (-j\omega\epsilon E_x) \nonumber\\
+&=& -\omega^2\mu\epsilon E_x \nonumber
+\end{eqnarray*}
+ゆえに
+\begin{equation}
+\frac{d^2E_x}{dz^2} + \omega^2\mu\epsilon E_x = 0\label{eq:plane_waveEx}
+\end{equation}
+である。式(\ref{eq:plane_HyEx})は、両辺を$z$で微分した後、式(\ref{eq:plane_ExHy})を代入する。
+\begin{eqnarray*}
+\frac{d^2H_y}{dz^2} &=& -j\omega\epsilon\frac{dE_x}{dz} \nonumber \\
+&=&-j\omega\epsilon(-j\omega\mu H_y) \nonumber\\
+&=&-\omega^2\mu\epsilon H_y
+\end{eqnarray*}
+ゆえに
+\begin{equation}
+\frac{d^2H_y}{dz^2} + \omega^2\mu\epsilon H_y = 0\label{eq:plane_waveHy}
+\end{equation}
+である。同様に$E_y$と$H_x$も、
+\begin{eqnarray}
+\frac{d^2E_y}{dz^2} + \omega^2\mu\epsilon E_y &=& 0 \label{eq:plane_waveEy}\\
+\frac{d^2H_x}{dz^2} + \omega^2\mu\epsilon H_x &=& 0\label{eq:plane_waveHx}
+\end{eqnarray}
+となる。これらの、式(\ref{eq:plane_waveEx})から式(\ref{eq:plane_waveHx})の4つの式は、
+振動を表す微分方程式である。
+
+$\kappa^2=\omega^2\mu\epsilon$とおくと、式(\ref{eq:plane_waveEx})は、
+\[
+\frac{d^2E_x}{dz^2} + \kappa^2 E_x = 0
+\]
+である。$E_x=e^{\lambda z}$と仮定して、$z$の一階微分、二階微分を計算すると
+\begin{eqnarray*}
+\frac{dE_x}{dz} &=& \lambda e^{\lambda z}\\
+\frac{d^2E_x}{dz^2} &=& \lambda^2 e^{\lambda z}
+\end{eqnarray*}
+なので、元の微分方程式に代入すると
+\[
+(\lambda^2 + \kappa^2)e^{\lambda z} = 0
+\]
+となる。$e^{\lambda z} \neq 0$なので、$\lambda^2 + \kappa^2 = 0$。よって$\lambda=\pm j\kappa$。ゆえに一般解は
+$C_1$、$C_2$を定数として
+\[
+E_x = C_1 e^{j\kappa z} + C_2 e^{-j\kappa z}
+\]
+である。前述のオイーラーの公式を用いて、$C_1$、$C_2$を適当に選ぶと、
+\begin{equation}
+E_x = A_1\cos\kappa z + jB_1\sin\kappa z
+\end{equation}
+である。残りの式も同様に、
+\begin{eqnarray}
+H_y &=& A_2\cos\kappa z + jB_2\sin\kappa z \\
+E_y &=& A_3\cos\kappa z + jB_3\sin\kappa z \\
+H_x &=& A_4\cos\kappa z + jB_4\sin\kappa z
+\end{eqnarray}
+となる。$\bm{E}$および$\bm{H}$は、角速度$\omega = 2\pi f$の正弦波であると仮定していたことを思い出すと、
+$E_x = A_1'\sin \omega t + B_1' \cos \omega t$と書けるはずである。電磁波の伝搬速度を$v$とすると、$z=vt$であるから
+\begin{eqnarray*}
+E_x &=& A_1\cos \kappa vt + jB_1 \sin \kappa vt \\
+&=& A_1\cos \omega \sqrt{\mu \epsilon}vt + jB_1\sin \omega \sqrt{\mu \epsilon}vt\\
+&=&  A_1\cos \omega t + jB_1 \sin \omega t
+\end{eqnarray*}
+$\sin$または$\cos$の引数を比較すると、$\omega v\sqrt{\mu \epsilon} t= \omega t$であるから、
+\begin{equation}
+v = \frac{1}{\sqrt{\mu \epsilon}}
+\end{equation}
+である。真空中の場合、$\mu = 4\pi \times 10^{-7}\mathrm{[H/m]}$、$\epsilon =8.854187817620 \times 10^{-12} \mathrm{[s^4A^2/kg\cdot m^3]}$であるから、
+$v=2.9979\times 10^8 \mathrm{[m/s]}$となり光速度$c$に一致する。
+
+もしも、ダイポールアンテナが水平に張られており、それに周波数$f$の高周波電圧が印可されていたとすると、水平方向に電場の変化が生じる。すなわち
+\[
+E_x = E\cos\omega t + jE\sin\omega t, \quad E_y=Ez=0
+\]
+の電場が生じる。式(\ref{eq:plane_waveEzExHy})に代入して
+\begin{eqnarray}
+0 - \frac{d}{dz}(E\cos\kappa z + jE\sin\kappa z) &=& -(-E\kappa\sin\kappa z + jE\kappa\cos\kappa z) \nonumber\\
+&=&-(-E\omega\sqrt{\mu\epsilon}\sin\kappa z + jE\omega\sqrt{\mu\epsilon}\cos\kappa z) \nonumber\\
+&=&-j\omega\mu H_y \nonumber\\
+H_y&=&jE\sqrt{\frac{\epsilon}{\mu}}\sin\kappa z + E\sqrt{\frac{\epsilon}{\mu}}\cos\kappa z \nonumber\\
+\frac{E_x}{H_y} &=& \sqrt{\frac{\mu}{\epsilon}} = \zeta
+\end{eqnarray}
+となる。アンテナに印可された高周波電圧により、空間を伝播するに電場と磁場の波が生じる。これが電磁波である。
+この場合、電場が変化の向きが$y$方向（鉛直方向）であるから、垂直偏波の電磁波である。水平偏波の場合も同様である。
+また、ループアンテナ等により、空間に磁場の変化が生じた場合も、磁場の変化から電場が誘起されることを除けば、同様のことが起こる。
+$\zeta$は、インピーダンスの次元を持ち、真空中ではおよそ377$\Omega$である。
+
+以上のように、マクスウェル方程式から波動関数を導き、電場または磁場が正弦波であることを仮定すると
+空間を伝播する電場と磁場の波、すなわち電磁波の存在を導くことができた。

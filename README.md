@@ -5,3 +5,13 @@
 この同人誌は、マクスウェル方程式から電波を理論的に導出した後、 最近のラジオの検波方式であるIQ検波の原理を解説しています。 物理をやっている人でなければ、結果だけが必要で、 式までフォローする必要がない方がほとんどだと思います。 この同人誌は、計算過程をなるべく省略せずに書いていますので、 そのような方にも、自分の手を動かして理解をすすめる事ができます。
 
 計算間違いやロジックの間違いなど、十分チェックしたつもりですが もしもありましたら、Issueでお知らせください。
+
+## 電子版について
+電子版は、通常版と製本版の2種類作成しています。
+製本版は、コピー本の形で読みたい方用のPDFファイルで、A4サイズ両面に短辺とじで印刷してください。
+
+* 最新版 (master)
+	* [通常版](https://github.com/chomy/DSPRadioFundamental/raw/master/DSPRadioFundamental.pdf)
+	* [製本版](https://github.com/chomy/DSPRadioFundamental/raw/master/DSPRadioFundamental-print.pdf)
+
+

@@ -69,7 +69,7 @@ V_m &=&  (\sum_n s_n\sin\omega_n t + C)\sin\omega_c t \nonumber \\
 \section*{IQ検波}
 さて、本題のDSPを使った、AM変調波から信号波を取り出す原理を説明しましょう。
 ちなみに、変調波から信号波を取り出すことを復調とか検波といいます。
-AMラジオの検波の流れを示すために、DSPラジオIC Si4825-A10のデータシートにあるブロックダイアグラムを図\ref{fig:block}を見てみましょう。
+AMラジオの検波の流れを示すために、DSPラジオIC Si4825-A10のデータシートにあるブロックダイアグラム図\ref{fig:block}を見てみましょう。
 
 
 \begin{figure}
@@ -80,13 +80,14 @@ AMラジオの検波の流れを示すために、DSPラジオIC Si4825-A10の�
 
 アンテナから入力された信号は、ALC(Auto Level Control)回路で増幅率を制御された低ノイズアンプ(LNA:Low Noise Amp)で増幅することで入力レベルを一定にしています。
 バツ印がマルで囲まれた記号は、Double Balanced Mixer (DBM)という回路です。
-DBMは、3つの端子を持っており、入力信号と、基準信号の掛け算をする回路です。
+DBMは、入力信号と、基準信号を入力し、それらの
+掛け算を出力する回路です。
 
 基準信号は、AFC(Auto Frequency Control)で制御された、一定周波数の
 発信機（マルにニョロの記号）から作られます。これを局部発振器と言います。
 
 090と書かれたものは位相器で、波の位相を90度ずらした基準信号と
-ずらさ基準信号を出力します。
+ずらさない基準信号を出力します。
 
 さて、アンテナで受信された電波はアンプで増幅され、二分割されて
 それぞれDBMの入力端子に入力されます。局部発振器でつくった基準信号は
@@ -99,14 +100,14 @@ DBMに入力します。
 \begin{equation}
 V_L = A_L \sin(2 \pi f_L t) = A_L \sin\omega_Lt
 \end{equation}
-となります。ここで$\omega_L = 2\pi f_L$です。Double Balanced Mixerは、二つの入力端子の積が出力するので、I成分は、
+となります。ここで$\omega_L = 2\pi f_L$です。DBMは、二つの入力端子の積を出力するので、I成分は、
 \begin{eqnarray}
 V_I &=& V_mA_L\sin(\omega_Lt + \frac{\pi}{2}) \nonumber\\
 &=& V_mA_L\cos\omega_Lt \nonumber\\
 &=& (V_s + C)\sin\omega_ct\cos\omega_Lt \nonumber\\
 &=& \frac{V_s + C}{2}\{\sin(\omega_c + \omega_L)t + \sin(\omega_c - \omega_L)t\} \label{eq:AM_I}
 \end{eqnarray}
-で、Q成分も同様に
+となり、Q成分も同様に
 \begin{eqnarray}
 V_Q &=& V_mA_L\sin\omega_Lt \nonumber\\
 &=& (V_s + C)\sin\omega_ct\sin\omega_Lt \nonumber\\
@@ -127,7 +128,7 @@ V_Q &=& V_mA_L\sin\omega_Lt \nonumber\\
 \end{figure}
 
 \section*{数値計算によるAM変調波の検波}
-さて、信号処理用のコンピュータであるDSPの中では何が行われいるのでしょう。
+さて、信号処理用のコンピュータであるDSPの中では何が行われているのでしょう。
 
 (7)、(8)式を見てわかるように、$\sin$のカッコの中が$\omega_c+\omega_L$と
 $\omega_c-\omega_L$の二種類があります。
@@ -142,7 +143,7 @@ V_I' &=& \frac{V_s+C}{2}\cos(\omega_c - \omega_L) \label{eq:AM_DSP_I}\\
 V_Q' &=& \frac{V_s+C}{2}\sin(\omega_c - \omega_L) \label{eq:AM_DSP_Q}
 \end{eqnarray}
 
-式(\ref{eq:AM_DSP_I})と式(\ref{eq:AM_DSP_Q})を二乗して足したものの平方根
+準備ができたので、式(\ref{eq:AM_DSP_I})と式(\ref{eq:AM_DSP_Q})を二乗して足したものの平方根
 を計算します。
 \begin{eqnarray}
 \sqrt{V_I'^2 + V_Q'^2} &=& \frac{V_s+C}{2}\sqrt{\cos^2(\omega_c - \omega_L)t + \sin^2(\omega_c - \omega_L)t }\\
@@ -164,7 +165,7 @@ DSPで高域フィルタ(High Pass Filter)の処理をすれば
 素子の非線形性や、外乱などで回路やデジタル処理は理想的なものではありません。
 （言い訳）
 そこで高調波成分をLPFで除去すると、図\ref{fig:output}のようにきれいに信号波を、取り出すことができました。これは図1の上段左と同じ波形です！
-あとは、スピーカーで音が出る程度にアンプで増幅してあげれば、AMラジオのできあがり。
+あとは、スピーカーで音が出る程度にアンプで増幅してあげれば、AMラジオのできあがりです。
 \begin{figure}
 \begin{minipage}{0.5\hsize}
 \scalebox{0.2}{\rotatebox{-90}{\includegraphics{demodulate.ps}}}
@@ -179,6 +180,6 @@ DSPで高域フィルタ(High Pass Filter)の処理をすれば
 シミュレーションに用いたソースコードを、Listing\ref{list:simulation}
 に示しておきます。GNU Rのインストール方法、詳細は、\texttt{http://www.r-project.org}を参照してください。主要なLinuxディストリビューションではパッケージになっているので、そちらを使ったほうが楽にインストールできるでしょう。
 
-
+\clearpage
 \lstset{language=R,basicstyle=\ttfamily,numbers=left}
 \lstinputlisting[caption=シミュレーションのソースコード,label=list:simulation]{sim.R}

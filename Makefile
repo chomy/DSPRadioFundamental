@@ -13,12 +13,12 @@ DVI=${SRC_PREFIX}.dvi
 PS=${SRC_PREFIX}.ps
 PDF=${PREFIX}.pdf
 BOOK=${PREFIX}-print.pdf
-TEXFILES=main.tex colophon.tex cover.tex fm.tex iq.tex radio.tex wifi.tex
+TEXFILES=main.tex intro.tex colophon.tex cover.tex fm.tex iq.tex radio.tex wifi.tex
 
 .suffix: .tex .dvi
 
-#all: ${DVI}
-all: book
+all: ${DVI}
+#all: book
 
 pdf: ${PDF}
 
